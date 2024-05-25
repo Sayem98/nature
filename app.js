@@ -81,11 +81,18 @@ const deleteATour = (req, res) => {
   });
 };
 
-app.get('/api/v1/tours', getAllTours);
-app.post('/api/v1/tours', createATour);
-app.get('/api/v1/tours/:id', getATour);
-app.patch('/api/v1/tours/:id', updateATour);
-app.delete('/api/v1/tours/:id', deleteATour);
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', createATour);
+// app.get('/api/v1/tours/:id', getATour);
+// app.patch('/api/v1/tours/:id', updateATour);
+// app.delete('/api/v1/tours/:id', deleteATour);
+
+app.route('/api/v1/tours').get(getAllTours).post(createATour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getATour)
+  .patch(updateATour)
+  .delete(deleteATour);
 
 const port = 3000;
 app.listen(port, () => {

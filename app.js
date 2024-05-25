@@ -89,6 +89,52 @@ const deleteATour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    data: null,
+  });
+};
+
+const getAUser = (req, res) => {
+  const userId = req.params.id;
+  res.status(200).json({
+    status: 'success',
+    data: {
+      id: userId,
+    },
+  });
+};
+
+const updateAUser = (req, res) => {
+  const userId = req.params.id;
+  res.status(200).json({
+    status: 'success',
+    data: {
+      id: userId,
+    },
+  });
+};
+
+const createAUser = (req, res) => {
+  res.status(201).json({
+    status: 'success',
+    data: {
+      id: 1,
+    },
+  });
+};
+
+const deleteAUser = (req, res) => {
+  const userId = req.params.id;
+  res.status(201).json({
+    status: 'success',
+    data: {
+      id: userId,
+    },
+  });
+};
+
 // app.get('/api/v1/tours', getAllTours);
 // app.post('/api/v1/tours', createATour);
 // app.get('/api/v1/tours/:id', getATour);
@@ -101,6 +147,13 @@ app
   .get(getATour)
   .patch(updateATour)
   .delete(deleteATour);
+
+app.route('/api/v1/users').get(getAllUsers).post(createAUser);
+app
+  .route('/api/v1/users/:id')
+  .get(getAUser)
+  .patch(updateAUser)
+  .delete(deleteAUser);
 
 const port = 3000;
 app.listen(port, () => {

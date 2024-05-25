@@ -75,3 +75,8 @@ exports.deleteATour = (req, res) => {
     data: null,
   });
 };
+
+exports.checkID = (req, res, next, val) => {
+  console.log(val);
+  next();
+};

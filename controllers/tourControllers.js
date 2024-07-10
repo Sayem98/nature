@@ -20,23 +20,23 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-exports.createATour = async (req, res) => {
-  console.log(req.body);
-  try {
-    const tour = await Tour.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: tour,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: 'Invalid data sent',
-    });
-  }
+const catchAsync = (fn) => {
+  return (req, res, next) => {
+    fn(req, res, next).catch(next);
+  };
 };
+
+exports.createATour = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+
+  const tour = await Tour.create(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      tour: tour,
+    },
+  });
+});
 
 exports.getATour = async (req, res) => {
   console.log(req.params);

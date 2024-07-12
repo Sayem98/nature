@@ -30,6 +30,16 @@ const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
   return new AppError(message, 400);
 };
+const handleDuplicateFieldsDB = (err) => {
+  const message = `Dupicate field value ${err.errmsg.match(/(["'])(\\?.)*?\1/)[0]}`;
+  return new AppError(message, 400);
+};
+
+const handleValidationError = (err) => {
+  const errors = Object.values(err.errors).map((error) => error.message);
+  const message = `Invalid input data . ${errors.join('. ')}`;
+  return new AppError(message, 400);
+};
 
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
@@ -40,6 +50,8 @@ module.exports = (err, req, res, next) => {
   } else {
     let error = { ...err };
     if (err.name === 'CastError') error = handleCastErrorDB(error);
+    if (err.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (err.name === 'ValidationError') error = handleValidationError(error);
     sendErrProduction(error, res);
   }
 };

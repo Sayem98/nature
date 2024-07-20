@@ -8,11 +8,15 @@ const router = express.Router();
 router
   .route('/')
   .get(authontroller.protect, tourControllers.getAllTours)
-  .post(tourControllers.createATour);
+  .post(authontroller.protect, tourControllers.createATour);
 router
   .route('/:id')
   .get(tourControllers.getATour)
   .patch(tourControllers.updateATour)
-  .delete(tourControllers.deleteATour);
+  .delete(
+    authontroller.protect,
+    authontroller.restrictTo('admin', 'lead-guide'),
+    tourControllers.deleteATour,
+  );
 
 module.exports = router;

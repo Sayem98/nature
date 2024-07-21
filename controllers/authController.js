@@ -89,3 +89,33 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.forgetPassword = catchAsync(async (req, res, next) => {
+  const hashToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+  const user = await User.findOne({
+    passwordResetToken: hashToken,
+    passworsdResetExpires: {
+      $gt: { Date: now() },
+    },
+  });
+
+  if (!user) {
+    next(new AppError('Token is invalid or expired', 400));
+  }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passworsdResetExpires = token;
+
+  await user.save();
+
+  const token = signToken(user._id);
+
+  res.status(201).json({
+    status: 'success',
+    token,
+  });
+});

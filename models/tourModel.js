@@ -13,6 +13,15 @@ const tourSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'A tour must have a price'],
   },
+  duration: {
+    type: Number,
+    required: [true, 'A tour must have duration'],
+  },
+  difficulty: {
+    type: String,
+    enum: ['easy', 'medium', 'hard'],
+    required: [true, 'A tour must have difficulty'],
+  },
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

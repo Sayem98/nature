@@ -4,7 +4,26 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
-  const tours = await Tour.find();
+  console.log(req.query);
+  // const tours = await Tour.find(req.query);
+
+  const queryObj = { ...req.query };
+  const excludeFields = ['page', 'sort', 'limit', 'fields'];
+  excludeFields.forEach((el) => delete queryObj[el]);
+
+  let queryStr = JSON.stringify(queryObj);
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+  let query = Tour.find(JSON.parse(queryStr));
+
+  // sorting -price for decending order.
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  }
+
+  const tours = await query;
+
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -15,9 +34,13 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.createATour = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-
-  const tour = await Tour.create(req.body);
+  const tour = await Tour.create({
+    name: req.body.name,
+    rating: req.body.rating,
+    price: req.body.price,
+    duration: req.body.duration,
+    difficulty: req.body.difficulty,
+  });
   res.status(201).json({
     status: 'success',
     data: {

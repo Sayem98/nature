@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
-  console.log(req.query);
+  // console.log(req.query);
   // const tours = await Tour.find(req.query);
 
   const queryObj = { ...req.query };
@@ -32,6 +32,13 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     // default
     query = query.select('-__v');
   }
+
+  //pagination
+  const page = req.query.page * 1 || 1;
+  const limit = req.query.limit * 1 || 100;
+  const skip = (page - 1) * limit;
+  console.log(skip, limit);
+  query = query.skip(skip).limit(limit);
 
   const tours = await query;
 

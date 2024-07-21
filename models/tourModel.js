@@ -22,6 +22,11 @@ const tourSchema = new mongoose.Schema({
     enum: ['easy', 'medium', 'hard'],
     required: [true, 'A tour must have difficulty'],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    select: false,
+  },
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

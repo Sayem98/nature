@@ -12,7 +12,7 @@ const db = process.env.DATABASE.replace(
 );
 const local_db = process.env.DATABASE_LOCAL;
 mongoose
-  .connect(process.env.NODE_ENV === 'development' ? local_db : local_db, {})
+  .connect(process.env.NODE_ENV === 'development' ? local_db : db, {})
   .then((con) => {
     console.log('DB connection successful');
   });

@@ -91,31 +91,27 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.forgetPassword = catchAsync(async (req, res, next) => {
-  const hashToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+  // get user based on the mail
   const user = await User.findOne({
-    passwordResetToken: hashToken,
-    passworsdResetExpires: {
-      $gt: { Date: now() },
-    },
+    email: req.body.email,
   });
+  console.log(user);
 
   if (!user) {
-    next(new AppError('Token is invalid or expired', 400));
+    return next(new AppError('No user found with that mail', 404));
   }
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passworsdResetExpires = token;
 
-  await user.save();
+  console.log(user);
 
-  const token = signToken(user._id);
+  const resetToken = user.createPasswordResetToken();
+  await user.save({
+    validateBeforeSave: false,
+  });
 
   res.status(201).json({
     status: 'success',
-    token,
+    resetToken,
   });
 });
+
+exports.resetPassword = catchAsync(async (req, res, next) => {});

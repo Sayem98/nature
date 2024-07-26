@@ -4,6 +4,7 @@ const authController = require('./../controllers/authController');
 const router = express.Router();
 
 router.patch('/updateMe', authController.protect, userControllers.updateMe);
+router.patch('/resetPassword', authController.resetPassword);
 
 router
   .route('/')

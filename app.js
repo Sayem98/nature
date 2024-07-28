@@ -1,5 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const mongoSanetizee = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const tourRouter = require('./routes/tourRouters');
 const userRouter = require('./routes/userRouters');
@@ -8,20 +11,17 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorControllers');
 
 const app = express();
+// global middlewere
 
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+// set security http headers
+app.use(helmet());
 
-app.use((req, res, next) => {
-  console.log(
-    process.env.NODE_ENV === 'development'
-      ? '---Development---'
-      : '---Production---',
-  );
-  next();
-});
+// development looging
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
+// limit request for same IP
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -29,6 +29,22 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter); // Q? What happens if i don't give '/api'
+
+// body parser, reading data from body into req.body
+app.use(
+  express.json({
+    limit: '10kb',
+  }),
+);
+
+// data sanetization against noSQL query injection
+app.use(mongoSanetizee());
+
+// data sanetization against XSS
+app.use(xss());
+
+// serving static file.
+app.use(express.static(`${__dirname}/public`));
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

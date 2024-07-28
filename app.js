@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const tourRouter = require('./routes/tourRouters');
 const userRouter = require('./routes/userRouters');
 const authRouter = require('./routes/authRoutes');
@@ -20,6 +21,14 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requiest from this ip please try in an hour !',
+});
+
+app.use('/api', limiter); // Q? What happens if i don't give '/api'
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

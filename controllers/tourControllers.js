@@ -57,13 +57,29 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.createATour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.create({
-    name: req.body.name,
-    rating: req.body.rating,
-    price: req.body.price,
-    duration: req.body.duration,
-    difficulty: req.body.difficulty,
+  const {
+    name,
+    rating,
+    price,
+    duration,
+    difficulty,
+    startLocation,
+    locations,
+    guides,
+  } = req.body;
+  const tour = new Tour({
+    name: name,
+    rating: rating,
+    price: price,
+    duration: duration,
+    difficulty: difficulty,
+    startLocation: startLocation,
+    locations: locations,
+    guides: guides,
   });
+
+  await tour.save();
+
   res.status(201).json({
     status: 'success',
     data: {

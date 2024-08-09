@@ -27,6 +27,39 @@ const tourSchema = new mongoose.Schema({
     default: Date.now(),
     select: false,
   },
+  startDates: [Date],
+  images: [String],
+  // geospacial data
+  startLocation: {
+    // Geo JSON
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: [Number],
+    address: String,
+    description: String,
+  },
+  locations: [
+    {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      day: Number,
+    },
+  ],
+  guides: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

@@ -25,20 +25,24 @@ const reviewSchema = new mongoose.Schema({
     required: [true, 'Review must belong to a user'],
   },
 });
-
-const Review = mongoose.model('Review', reviewSchema);
-
 reviewSchema.pre(/^find/, function (next) {
   // console.log('populating user and tour');
+  // this.populate({
+  //   path: 'tour',
+  //   select: 'name',
+  // }).populate({
+  //   path: 'user',
+  //   select: 'name photo',
+  // });
+
   this.populate({
-    path: 'tour',
-    select: 'name',
-  }).populate({
     path: 'user',
     select: 'name photo',
   });
 
   next();
 });
+
+const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

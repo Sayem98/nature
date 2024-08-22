@@ -12,23 +12,8 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: null,
-  });
-};
-
-exports.getAUser = (req, res) => {
-  const userId = req.params.id;
-  res.status(200).json({
-    status: 'success',
-    data: {
-      id: userId,
-    },
-  });
-};
-
+exports.getAllUsers = factory.getAll(User);
+exports.getAUser = factory.getOne(User);
 exports.updateAUser = factory.updateOne(User);
 exports.createAUser = factory.createOne(User);
 exports.deleteAUser = factory.deleteOne(User);

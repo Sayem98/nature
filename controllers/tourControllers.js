@@ -3,6 +3,7 @@ const Tour = require('./../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handleFactory');
+
 exports.getAllTours = catchAsync(async (req, res, next) => {
   // console.log(req.query);
   // const tours = await Tour.find(req.query);
@@ -56,37 +57,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createATour = catchAsync(async (req, res, next) => {
-  const {
-    name,
-    rating,
-    price,
-    duration,
-    difficulty,
-    startLocation,
-    locations,
-    guides,
-  } = req.body;
-  const tour = new Tour({
-    name: name,
-    rating: rating,
-    price: price,
-    duration: duration,
-    difficulty: difficulty,
-    startLocation: startLocation,
-    locations: locations,
-    guides: guides,
-  });
-
-  await tour.save();
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: tour,
-    },
-  });
-});
+exports.createATour = factory.createOne(Tour);
 
 exports.getATour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id).populate('reviews');

@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const factory = require('./handleFactory');
+
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -28,25 +29,8 @@ exports.getAUser = (req, res) => {
   });
 };
 
-exports.updateAUser = (req, res) => {
-  const userId = req.params.id;
-  res.status(200).json({
-    status: 'success',
-    data: {
-      id: userId,
-    },
-  });
-};
-
-exports.createAUser = (req, res) => {
-  res.status(201).json({
-    status: 'success',
-    data: {
-      id: 1,
-    },
-  });
-};
-
+exports.updateAUser = factory.updateOne(User);
+exports.createAUser = factory.createOne(User);
 exports.deleteAUser = factory.deleteOne(User);
 
 exports.updateMe = catchAsync(async (req, res, next) => {

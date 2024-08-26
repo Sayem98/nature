@@ -83,14 +83,14 @@ exports.getAll = (Model) =>
 
     res.status(200).json({
       status: 'success',
-      results: tours.length,
+      results: docs.length,
       data: {
         docs,
       },
     });
   });
 
-exports.getAUser = (Model) =>
+exports.getOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const data = await Model.findById(req.params.id);
     if (!data) return next(new AppError('No tour was found with that id', 404));

@@ -18,6 +18,11 @@ exports.updateAUser = factory.updateOne(User);
 exports.createAUser = factory.createOne(User);
 exports.deleteAUser = factory.deleteOne(User);
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1. Create error for password data
   if (req.body.password || req.body.passwordConfirm) {

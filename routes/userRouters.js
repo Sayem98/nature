@@ -1,18 +1,14 @@
 const express = require('express');
 const userControllers = require('./../controllers/userControllers');
 const authController = require('./../controllers/authController');
-const factory = require('./handleFactory');
-
+const factory = require('../controllers/handleFactory');
+const User = require('../models/userModel');
 const router = express.Router();
 
-router.patch('/updateMe', authController.protect, userControllers.updateMe);
-router.patch('/resetPassword', authController.resetPassword);
-router.get(
-  '/me',
-  authController.protect,
-  userControllers.getMe,
-  factory.getOne(User),
-);
+router.use(authController.protect);
+
+router.patch('/updateMe', userControllers.updateMe);
+router.get('/me', userControllers.getMe, factory.getOne(User));
 
 router
   .route('/')

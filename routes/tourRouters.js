@@ -10,12 +10,20 @@ router.use('/:tourId/reviews', reviewRouter);
 
 router
   .route('/')
-  .get(authontroller.protect, tourControllers.getAllTours)
-  .post(authontroller.protect, tourControllers.createATour);
+  .get(tourControllers.getAllTours)
+  .post(
+    authontroller.protect,
+    authontroller.restrictTo('admin', 'lead-guide'),
+    tourControllers.createATour,
+  );
 router
   .route('/:id')
   .get(tourControllers.getATour)
-  .patch(tourControllers.updateATour)
+  .patch(
+    authontroller.protect,
+    authontroller.restrictTo('admin', 'lead-guide'),
+    tourControllers.updateATour,
+  )
   .delete(
     authontroller.protect,
     authontroller.restrictTo('admin', 'lead-guide'),

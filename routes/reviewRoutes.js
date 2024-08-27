@@ -1,5 +1,6 @@
 const reviewContoller = require('../controllers/reviewController');
 const authController = require('../controllers/authController');
+
 const express = require('express');
 
 const router = express.Router({
@@ -15,6 +16,18 @@ router
     reviewContoller.createReview,
   );
 
-router.route('/:id').delete(reviewContoller.deleteReview);
+router
+  .route('/:id')
+  .get(reviewContoller.getReview)
+  .patch(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewContoller.updateReview,
+  )
+  .delete(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewContoller.deleteReview,
+  );
 
 module.exports = router;

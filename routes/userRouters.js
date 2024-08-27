@@ -10,6 +10,8 @@ router.use(authController.protect);
 router.patch('/updateMe', userControllers.updateMe);
 router.get('/me', userControllers.getMe, factory.getOne(User));
 
+router.use(authController.restrictTo('admin'));
+
 router
   .route('/')
   .get(userControllers.getAllUsers)
